@@ -59,6 +59,14 @@ hermano(X, Y) :- padre(Z, X), padre(Z, Y), X \== Y.
 familiar(X, Y) :- padre(X, Y).
 familiar(X, Y) :- abuelo(X, Y).
 familiar(X, Y) :- hermano(X, Y).
+familiar(X, Y) :- primo(X, Y).
+familiar(X, Y) :- tio(X, Y).
+familiar(X, Y) :- sobrino(X, Y).
+familiar(X, Y) :- nieto(X, Y).
+familiar(X, Y) :- bisabuelo(X, Y).
+familiar(X, Y) :- tatarabuelo(X, Y).
+familiar(X, Y) :- bisnieto(X, Y).
+familiar(X, Y) :- tataranieto(X, Y).
 
 tio(X, Y) :- padre(Z, Y), hermano(Z, X).
 sobrino(X, Y) :- tio(Y, X).
