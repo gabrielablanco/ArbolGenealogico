@@ -1,89 +1,82 @@
-hombre(arturo).
-hombre(mauricio).  %Tatarabuelos
-hombre(juan). %Bisabuelo
-hombre(carlos).
-hombre(faryd). %Abuelo o tio
-hombre(diego).
-hombre(andres).
-hombre(luis).
-hombre(manuel). %Padres o tios
-hombre(jose). %Cuñado
-hombre(alejandro).
-hombre(sebastian).
-hombre(oscar). %Hijos, nietos, bisnietos, tataranietos
+mujer("helena").
+mujer("amanda").
+mujer("argenis").
+mujer("nohora").
+mujer("maria").
+mujer("deicy").
+mujer("gabriela").
+mujer("adriana").
+mujer("paula").
+mujer("sofia").
+mujer("sandra").
+mujer("luisa").
+mujer("marcela").
 
-mujer(lucia).
-mujer(beatriz). %Tatarabuelas
-mujer(leonor). %Bisabuela
-mujer(argenis). %Abuela
-mujer(angelica).
-mujer(nohora).
-mujer(laura).
-mujer(sofia).
-mujer(sandra). %Cuñadas
-mujer(michelle). %Madre o tia
-mujer(paula).
-mujer(adriana).%adoptadas
-mujer(gabriela).%nieta,hija, bisnieta, tataranieta
+hombre("victor").
+hombre("arturo").
+hombre("primitivo").
+hombre("javier").
+hombre("jose").
+hombre("manuel").
+hombre("alejandro").
+hombre("sebastian").
+hombre("diego").
+hombre("david").
+hombre("bernardo").
 
-progenitor(arturo,juan).
-progenitor(lucia, juan).
-progenitor(mauricio, leonor).
-progenitor(beatriz, leonor).
+padre("victor", "primitivo").
+padre("helena", "primitivo").
+padre("arturo", "argenis").
+padre("amanda", "argenis").
+padre("primitivo", "jose").
+padre("argenis", "jose").
+padre("primitivo", "javier").
+padre("argenis", "javier").
+padre("primitivo", "manuel").
+padre("argenis", "manuel").
+padre("maria", "adriana").
+padre("jose", "adriana").
+padre("nohora", "sebastian").
+padre("nohora", "gabriela").
+padre("nohora", "diego").
+padre("javier", "sebastian").
+padre("javier", "gabriela").
+padre("javier", "diego").
+padre("gabriela", "bernardo").
+padre("alejandro", "bernardo").
+padre("gabriela", "sandra").
+padre("alejandro", "sandra").
+padre("sebastian", "luisa").
+padre("david", "luisa").
+padre("manuel", "paula").
+padre("deicy", "paula").
+padre("paula", "marcela").
+padre("sofia", "marcela").
 
-progenitor(juan,carlos).
-progenitor(juan,argenis).
-progenitor(juan,faryd).
-progenitor(leonor,carlos).
-progenitor(leonor,argenis).
-progenitor(leonor,faryd).
+hijo(X, Y) :- padre(Y, X).
+abuelo(X, Y) :- padre(X, Z), padre(Z, Y).
+hermano(X, Y) :- padre(Z, X), padre(Z, Y), X \== Y.
+familiar(X, Y) :- padre(X, Y).
+familiar(X, Y) :- abuelo(X, Y).
+familiar(X, Y) :- hermano(X, Y).
 
-progenitor(carlos,diego).
-progenitor(carlos,michelle).
-progenitor(sandra,diego).
-progenitor(sandra,michelle).
+tio(X, Y) :- padre(Z, Y), hermano(Z, X).
+sobrino(X, Y) :- tio(Y, X).
+primo(X, Y) :- abuelo(Z, X), abuelo(Z, Y).
+nieto(X, Y) :- abuelo(Y, X).
+pareja(X, Y) :- hijo(Z, X), padre(Y, Z), X \== Y.
+bisabuelo(X, Y) :- hijo(Z, X), abuelo(Z, Y).
+tatarabuelo(X, Y) :- hijo(Z, X), bisabuelo(Z, Y).
+bisnieto(X, Y) :- bisabuelo(Y, X).
+tataranieto(X, Y) :- tatarabuelo(Y, X).
+serfeliz(X) :- pareja(X, Z), pareja(Z, X).
+adoptado(X) :- padre(P, X), padre(M, X ), hombre(P), hombre(M), P  \==  M.
+adoptado(X) :- padre(P, X), padre(M, X), mujer(P), mujer(M), P  \==  M.
+cuñado(X, Y) :- pareja(A,Y),hermano(X,A).
+cuñado(X,Y) :- pareja(A,X), hermano(Y,A).
 
 
-progenitor(argenis,luis).
-progenitor(argenis,manuel).
-progenitor(jose,luis).
-progenitor(jose,manuel).
 
-progenitor(faryd,andres).
-progenitor(angelica,andres).
-
-progenitor(diego,sebastian).
-progenitor(diego,gabriela).
-progenitor(diego,alejandro).
-progenitor(nohora,sebastian).
-progenitor(nohora,gabriela).
-progenitor(nohora,alejandro).
-
-progenitor(michelle,paula).
-progenitor(sofia,paula).
-progenitor(michelle,adriana).
-progenitor(sofia,adriana).
-
-progenitor(andres,oscar).
-progenitor(laura,oscar).
-
-pareja(X,Y) :- progenitor(X,Z),progenitor(Y,Z),X \== Y.
-padre(X,Y):- hombre(X),progenitor(X,Y).
-madre(X,Y):- mujer(X),progenitor(X,Y).
-adoptado(A) :- progenitor(X,A),hombre(X),hombre(Y),pareja(X,Y), X \== Y.
-adoptado(A) :- progenitor(X,A),mujer(X),mujer(Y),pareja(X,Y), X\== Y.
-abuelo(X,Y) :- progenitor(X,Z) , progenitor(Z,Y).
-bisabuelo(X,Y) :- progenitor(X,Z), abuelo(Z,Y).
-tatarabuelo(X,Y) :- progenitor(X,Z), bisabuelo(Z,Y).
-tataranieto(X,Y) :- progenitor(Y,Z),bisabuelo(Z,X).
-bisnieto(X,Y) :- progenitor(Y,Z),abuelo(Z,X).
-nieto(X,Y) :- progenitor(Y,Z),progenitor(Z,X).
-hermano(X,Y) :- progenitor(Z,X),progenitor(Z,Y),X \== Y.
-tio(X,Y) :- progenitor(Z,Y),hermano(Z,X).
-cuñado(X,Y) :- hermano(X,Z),pareja(Z,Y).
-cuñado(X,Y):- hermano(Y,Z),pareja(Z,X).
-sobrino(X,Y):-progenitor(Z,X),hermano(Z,Y).
-serfeliz(X) :- pareja(X,Y),progenitor(X,Z),progenitor(Y,Z).
 
 
 
